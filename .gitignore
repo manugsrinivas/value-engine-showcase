@@ -1,0 +1,5 @@
+# never include strategy internals, data, or credentials in the public showcase
+*.pkl
+*.parquet
+*.csv
+*.json
