@@ -60,12 +60,12 @@ purged cross-validation, Probability of Backtest Overfitting, Deflated Sharpe Ra
 | Sortino | 1.26 | **1.32** |
 | Max drawdown | −27.8% | −27.9% (flat) |
 | Worst 24-month drawdown | −23.2% | **−21.9%** |
-| COVID crash window | +9.3% | **+12.0%** |
+| COVID crash window | +9.3% | **+12.0%** (with a −20% intra-window trough vs SPY −33% — resilience, not immunity) |
 | Out-of-sample folds w/ better drawdown | — | **3 of 4** |
 
 *(Backtest on a survivorship-bounded 13F universe with cost modeling; live paper-traded since
 June 2026 with a documented execution-integrity shakedown. Absolute levels are backtest levels;
-the claim defended is the relative improvement and the process, not a live-return promise.)*
+the claim defended is the relative improvement and the process, not a live-return promise. Crash-window forensics: COVID resilience is structural (broad stop-and-redeploy, consistent across all configurations); 2022-bear outperformance traced substantially to a concentrated energy winner and is not claimed as a repeatable property.)*
 
 ## Architecture sketch
 
