@@ -51,17 +51,17 @@ purged cross-validation, Probability of Backtest Overfitting, Deflated Sharpe Ra
    (COVID 2020, 2022 rate bear) — reflecting a real allocator's mandate rather than a backtest
    beauty contest.
 
-## Validation results (final deployed configuration, 2014–2025 backtest)
+## Validation results (final deployed config: distress veto + valuation-confluence tilt + LTCG-aware hold, 2014–2025)
 
 | Metric | Baseline screen | Final model |
 |---|---|---|
-| Total return | 515% | **560%** |
-| Sharpe | 0.85 | **0.88** |
-| Sortino | 1.26 | **1.32** |
-| Max drawdown | −27.8% | −27.9% (flat) |
-| Worst 24-month drawdown | −23.2% | **−21.9%** |
-| COVID crash window | +9.3% | **+12.0%** (with a −20% intra-window trough vs SPY −33% — resilience, not immunity) |
-| Out-of-sample folds w/ better drawdown | — | **3 of 4** |
+| Total return | 625% | **715%** |
+| Sharpe | 0.93 | **0.98** |
+| Sortino | 1.41 | **1.51** |
+| Max drawdown | −23.5% | **−22.1%** |
+| Worst 24-month drawdown | −18.0% | −18.0% (flat) |
+| COVID crash window | +14.1% | **+16.7%** (intra-window trough ~−20% vs SPY −33% — resilience, not immunity) |
+| Overfit stats (PBO / DSR) | — | **0.03 / 0.996** |
 
 *(Backtest on a survivorship-bounded 13F universe with cost modeling; live paper-traded since
 June 2026 with a documented execution-integrity shakedown. Absolute levels are backtest levels;
