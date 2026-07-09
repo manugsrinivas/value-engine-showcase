@@ -20,10 +20,14 @@ for settlement. Never over-orders, degrades gracefully under T+1 cash settlement
 opposite-side order). If the stop was re-armed while the buy was still open, the broker rejected the
 stop ("opposite side order exists") — and the code logged "stop re-armed" anyway. Result: positions
 holding overnight with **no stop**, invisibly.
-**Fix:** block until the buy reaches a terminal state (filled/canceled/rejected) before re-arming;
-log truthfully on failure; and a **final safety sweep at the end of every run** that arms a stop on
-any position found naked, regardless of cause. Defense in depth: the sweep once caught 12 naked
-positions from a single run's collisions.
+**Fix (a two-sided terminal-state barrier):** the cash-account rule forbids a resting sell-stop and a
+buy on the same symbol at once, so a top-up must sequence *cancel stop → await cancel terminal → IOC
+buy → await buy terminal → re-arm stop*. The subtle second-order bug lived in the await itself: it
+returned on the *first* transient API read error, re-arming the stop while the buy still read open →
+wash-trade reject → naked. Hardened to **poll through transient errors to a deadline** (never re-arm
+early) instead of bailing. Layered beneath it: a **final safety sweep at the end of every run** that
+arms a stop on any position found naked, regardless of cause — the backstop even if a per-name await is
+exhausted. Defense in depth: the sweep once caught 12 naked positions from a single run's collisions.
 
 ### 3. Corporate actions vs. stored state (the instant-liquidation bug)
 **Failure:** on a stock split, the broker cancels resting stops and adjusts share counts. The
