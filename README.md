@@ -94,12 +94,12 @@ Alpaca market data        ├─> nightly screen: IV/DCF value filter + quality 
 FRED macro (AAA yield…)   ┘        │  (ROE, FCF/assets, accruals, Merton DD, Altman-Z″ redflag,
 13F institutional filings          │   data-completeness fail-closed gate)
                                    ▼
-                    valuation confluence (4 models) ──> sizing tilts (yield-weight × confluence)
+                    iv-discount + confluence signals ──> sizing tilt (yield-weight × deep-discount overweight)
                                    ▼
                     candidate CSV -> morning executor (bracket entries, protective stops,
                     BP-aware sizing, corp-action guard, naked-position sweep)
                                    ▼
-                    evening manager (partial TP / runners / max-hold renewal / SGOV safety dial)
+                    evening manager (partial TP / runners / 260-bar LTCG hold renewal / SGOV macro dial)
                                    ▼
                     weekly holdings thesis report + monitoring pack (auto-generated)
 ```
