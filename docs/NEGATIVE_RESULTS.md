@@ -25,6 +25,7 @@
 | **Cross-sectional ML ranking** | Learn what wins | Out-of-sample AUC ≈ 0.51 at every horizon/feature-set tried → demoted to monitoring-only |
 | **Conviction concentration (top-N by margin of safety)** | Back the best ideas | Breadth beat concentration — with no reliable ex-ante winner signal, many small shots dominate few big ones |
 | **Periodic rebalancing (all cadences tested)** | Portfolio hygiene | Every rebalance-to-target variant destroyed returns vs letting winners run |
+| **Daily-loss circuit breaker** | Flatten to cash after a big down day | Hurts every metric and *deepens* drawdown — the down days cluster in volatile recoveries, so it flattens into the bounce and re-enters higher (whipsaw). Same failure as every sell-on-weakness rule: a dip-buying book must not sell dips |
 
 ## What survived (the pattern)
 
