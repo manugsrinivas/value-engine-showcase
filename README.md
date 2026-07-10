@@ -35,37 +35,56 @@ purged cross-validation, Probability of Backtest Overfitting, Deflated Sharpe Ra
    **orthogonal LEVEL vetoes** (solvency, earnings quality, data completeness) rather than
    trend/health gates, which systematically amputate the beaten-down re-raters that carry the P&L.
 
-2. **Multi-model valuation confluence.** Names where four independent valuation models agree
-   (>20% margin of safety on each) win materially more often (39% vs 27%) — implemented not as a
-   filter but as a *breadth-preserving sizing tilt*, validated to cut drawdowns ~3pp at zero Sharpe
-   cost, with the benefit concentrated exactly in choppy/trap-heavy and bear regimes.
+2. **Exploit edges as breadth-preserving *tilts*, not gates.** A margin-of-safety decomposition showed
+   deeper-discount entries genuinely earn more (+3.3% vs −0.9% per trade), but *tightening the value
+   gate* to capture it was a concentration mirage (non-monotonic, breadth collapsing 41→30 names). The
+   validated way to harvest the edge was a continuous **iv-discount sizing tilt** — overweight the
+   cheapest names while *every* name stays held — which beat the prior multi-model-confluence tilt on
+   every axis and in all four walk-forward folds with breadth intact. The same principle rejected the
+   value-gate tightening, momentum, and a daily-loss circuit breaker: **a dip-buying book must never
+   sell (or filter away) weakness — that fights its own edge.**
 
-3. **Interaction-aware combination testing.** The final model came from testing signals 1-by-1
-   *on top of* the live configuration (so redundancy shows up as harm, not double-counted credit) —
-   which revealed both a redundancy trap (mid-cycle earnings yield ≈ the already-live EPV/Graham
-   models; stacking deepened drawdowns 8pp) and a genuine positive interaction (a distress red-flag
-   gate makes a stronger confluence tilt safe by pruning the traps it would otherwise over-boost).
+3. **Interaction-aware combination testing.** The model was built by testing signals 1-by-1 *on top of*
+   the live configuration (so redundancy shows up as harm, not double-counted credit) — surfacing both
+   a redundancy trap (mid-cycle earnings yield ≈ the already-live earnings-power model; stacking deepened
+   drawdowns) and a genuine positive interaction (a distress red-flag gate makes a stronger sizing tilt
+   safe by pruning the traps it would otherwise over-weight).
 
-4. **Defense-first objective.** The optimization target was never raw return: it was
-   **market-wide-drawdown resilience** — Sortino, worst-24-month window, and crash-window behavior
-   (COVID 2020, 2022 rate bear) — reflecting a real allocator's mandate rather than a backtest
-   beauty contest.
+4. **Layered, whipsaw-free crash defense.** The optimization target was **drawdown resilience**, not raw
+   return. A synthetic fast-crash on the live book quantified it: an *orderly* crash caps the loss at the
+   average stop distance (~−9%), while the irreducible tail is an *overnight gap-down* (stops slip). The
+   response was a **layered** defense that never whipsaws — position stops, a gap-through-stop exit, a low
+   0.54 beta, a macro dial for slow/credit crashes, and a market-gap *entry pause* (don't buy the falling
+   knife) — plus the **redeploy engine**: in the COVID crash the screen bought at 55%-below-IV discounts
+   and those trades returned +43%, turning the drawdown into the book's best inventory. Every *selling*
+   crash-rule tested (daily-loss circuit breaker, gap-sell) was rejected for whipsawing the recovery.
 
-## Validation results (final deployed config: distress veto + valuation-confluence tilt + LTCG-aware hold, 2014–2025)
+## Validation results (final deployed config vs. the market, 2014–2025 backtest)
 
-| Metric | Baseline screen | Final model |
-|---|---|---|
-| Total return | 625% | **715%** |
-| Sharpe | 0.93 | **0.98** |
-| Sortino | 1.41 | **1.51** |
-| Max drawdown | −23.5% | **−22.1%** |
-| Worst 24-month drawdown | −18.0% | −18.0% (flat) |
-| COVID crash window | +14.1% | **+16.7%** (intra-window trough ~−20% vs SPY −33% — resilience, not immunity) |
-| Overfit stats (PBO / DSR) | — | **0.03 / 0.996** |
+Final config: IV/DCF value screen + quality/distress gates + **iv-discount sizing tilt** + **LTCG-aware
+one-year hold** + a **macro safety dial** (scales to T-bills in credit/macro stress). Shown both with the
+dial off (pure equity book) and on (as deployed), against SPY buy-and-hold on the identical window.
 
-*(Backtest on a survivorship-bounded 13F universe with cost modeling; live paper-traded since
-June 2026 with a documented execution-integrity shakedown. Absolute levels are backtest levels;
-the claim defended is the relative improvement and the process, not a live-return promise. Crash-window forensics: COVID resilience is structural (broad stop-and-redeploy, consistent across all configurations); 2022-bear outperformance traced substantially to a concentrated energy winner and is not claimed as a repeatable property.)*
+| Metric | SPY B&H | Model (dial off) | **Model (dial on — deployed)** |
+|---|---|---|---|
+| Total return | 312% | 799% | **693%** |
+| CAGR | 13.1% | 21.1% | **19.7%** |
+| Sharpe | 0.79 | 1.02 | **1.15** |
+| Sortino | 0.96 | 1.57 | **1.77** |
+| Max drawdown | −33.7% | −21.3% | **−19.2%** |
+| Beta to SPY | 1.00 | 0.94 | **0.54** |
+| Alpha / yr | — | +8.7% | **+12.0%** |
+
+The safety dial gives up ~1.4pp of CAGR to **halve beta (0.94→0.54)** and lift Sharpe/Sortino — turning
+the book into a genuine low-correlation defensive leg (its role in a multi-strategy portfolio).
+
+*(Backtest on a survivorship-bounded 13F universe with cost modeling; live paper-traded since June 2026
+under an execution-integrity shakedown. **Absolute levels are survivorship-flattered** — the claims defended
+are the *relative/structural* ones: lower beta, shallower drawdown, higher Sortino, and the process. Honest
+limits documented: the safety dial is a macro/credit-stress detector that **caught the 2022 bear but missed
+the fast COVID shock**; the book's COVID resilience came from position stops + crash-discount redeploy, not
+the dial; a true 2008 replay is infeasible on free data (machine-readable fundamentals begin 2009). The
+crash tail — an overnight gap-down that slips through stops — is real and unhedged beyond the low starting beta.)*
 
 ## Architecture sketch
 
@@ -98,5 +117,6 @@ FRED macro (AAA yield…)   ┘        │  (ROE, FCF/assets, accruals, Merton D
   multi-model valuation engine → automated brokerage execution) paper-trading a ~40-name portfolio
 - Designed an anti-overfitting validation harness (walk-forward, CPCV, PBO, Deflated Sharpe) that
   rejected 12 of 15 candidate signals and caught two look-ahead biases before deployment
-- Improved worst-24-month drawdown and Sortino vs baseline via interaction-tested distress gates
-  and a multi-model valuation-confluence sizing tilt, validated across COVID and 2022-bear regimes
+- Backtested to Sharpe 1.15 / Sortino 1.77 / −19% max-drawdown at beta 0.54 vs SPY 0.79 / −34% over
+  2014–2025, via a macro safety dial + an iv-discount sizing tilt, with a layered whipsaw-free crash
+  defense (stops, gap-through exit, market-gap entry-pause) validated to beat every sell-on-weakness rule
