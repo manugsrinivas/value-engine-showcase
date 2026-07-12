@@ -54,29 +54,38 @@ purged cross-validation, Probability of Backtest Overfitting, Deflated Sharpe Ra
    return. A synthetic fast-crash on the live book quantified it: an *orderly* crash caps the loss at the
    average stop distance (~−9%), while the irreducible tail is an *overnight gap-down* (stops slip). The
    response was a **layered** defense that never whipsaws — position stops, a gap-through-stop exit, a low
-   0.54 beta, a macro dial for slow/credit crashes, and a market-gap *entry pause* (don't buy the falling
+   ~0.5 beta (0.47 in the dial's out-of-sample window), a macro dial for slow/credit crashes, and a market-gap *entry pause* (don't buy the falling
    knife) — plus the **redeploy engine**: in the COVID crash the screen bought at 55%-below-IV discounts
    and those trades returned +43%, turning the drawdown into the book's best inventory. Every *selling*
    crash-rule tested (daily-loss circuit breaker, gap-sell) was rejected for whipsawing the recovery.
 
-## Validation results (final deployed config vs. the market, 2014–2025 backtest)
+## Validation results (final deployed config vs. the market; all figures total-return)
 
 Final config: IV/DCF value screen + quality/distress gates + **iv-discount sizing tilt** + **LTCG-aware
-one-year hold** + a **macro safety dial** (scales to T-bills in credit/macro stress). Shown both with the
-dial off (pure equity book) and on (as deployed), against SPY buy-and-hold on the identical window.
+one-year hold** + a **macro safety dial** (scales to T-bills in credit/macro stress).
 
-| Metric | SPY B&H | Model (dial off) | **Model (dial on — deployed)** |
-|---|---|---|---|
-| Total return | 312% | 799% | **693%** |
-| CAGR | 13.1% | 21.1% | **19.7%** |
-| Sharpe | 0.79 | 1.02 | **1.15** |
-| Sortino | 0.96 | 1.57 | **1.77** |
-| Max drawdown | −33.7% | −21.3% | **−19.2%** |
-| Beta to SPY | 1.00 | 0.94 | **0.54** |
-| Alpha / yr | — | +8.7% | **+12.0%** |
+**Full multi-regime window, 2014–2025 — dial OFF** (the dial is a model *trained on 2008–2019*, so
+dial-on results are only reported on its out-of-sample window below — no in-sample credit taken):
 
-The safety dial gives up ~1.4pp of CAGR to **halve beta (0.94→0.54)** and lift Sharpe/Sortino — turning
-the book into a genuine low-correlation defensive leg (its role in a multi-strategy portfolio).
+| Metric | SPY B&H | **Model (dial off)** |
+|---|---|---|
+| Total return | 312% | **799%** |
+| CAGR | 13.1% | **21.1%** |
+| Sharpe / Sortino | 0.79 / 0.96 | **1.02 / 1.57** |
+| Max drawdown | −33.7% | **−21.3%** |
+
+**Safety-dial evaluation, 2020–2026 only (strictly out-of-sample for the dial):**
+
+| Metric | Model dial OFF | **Model dial ON (deployed)** |
+|---|---|---|
+| Total return | 321% | **379%** |
+| CAGR | 25.1% | **27.6%** |
+| Sharpe / Sortino | 1.11 / 1.80 | **1.30 / 2.01** |
+| Max drawdown | −20.8% | **−17.1%** |
+| Beta / down-capture | 0.59 / 65% | **0.47 / 52%** |
+
+In its out-of-sample window the dial improved *every* axis (it de-risked into the 2022 bear) — the basis
+for keeping it deployed as the low-correlation defensive leg of a multi-strategy portfolio.
 
 *(Backtest on a survivorship-bounded 13F universe with cost modeling; live paper-traded since June 2026
 under an execution-integrity shakedown. **Absolute levels are survivorship-flattered** — the claims defended
