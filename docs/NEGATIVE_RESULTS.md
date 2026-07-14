@@ -25,6 +25,7 @@
 | **Cross-sectional ML ranking** | Learn what wins | Out-of-sample AUC ≈ 0.51 at every horizon/feature-set tried → demoted to monitoring-only |
 | **Conviction concentration (top-N by margin of safety)** | Back the best ideas | Breadth beat concentration — with no reliable ex-ante winner signal, many small shots dominate few big ones |
 | **Periodic rebalancing (all cadences tested)** | Portfolio hygiene | Every rebalance-to-target variant destroyed returns vs letting winners run |
+| **Revenue-vs-price divergence veto** | Literature: markets eventually pay for revenue that price hasn't followed | Trade-level signal genuinely strong (monotonic, orthogonal to the value screen) — but the portfolio gain (+375pp!) was a pure concentration artifact: with the production position cap applied it *reversed* on every axis. The definitive lesson in trade-level vs portfolio-level truth |
 | **Daily-loss circuit breaker** | Flatten to cash after a big down day | Hurts every metric and *deepens* drawdown — the down days cluster in volatile recoveries, so it flattens into the bounce and re-enters higher (whipsaw). Same failure as every sell-on-weakness rule: a dip-buying book must not sell dips |
 
 ## What survived (the pattern)

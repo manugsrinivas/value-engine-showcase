@@ -69,10 +69,10 @@ dial-on results are only reported on its out-of-sample window below — no in-sa
 
 | Metric | SPY B&H | **Model (dial off)** |
 |---|---|---|
-| Total return | 312% | **799%** |
-| CAGR | 13.1% | **21.1%** |
-| Sharpe / Sortino | 0.79 / 0.96 | **1.02 / 1.57** |
-| Max drawdown | −33.7% | **−21.3%** |
+| Total return | 312% | **817%** |
+| CAGR | 13.1% | **21.3%** |
+| Sharpe / Sortino | 0.79 / 0.96 | **1.09 / 1.68** |
+| Max drawdown | −33.7% | **−20.4%** |
 
 **Safety-dial evaluation, 2020–2026 only (strictly out-of-sample for the dial):**
 
