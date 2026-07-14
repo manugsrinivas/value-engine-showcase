@@ -67,22 +67,21 @@ one-year hold** + a **macro safety dial** (scales to T-bills in credit/macro str
 **Full multi-regime window, 2014–2025 — dial OFF** (the dial is a model *trained on 2008–2019*, so
 dial-on results are only reported on its out-of-sample window below — no in-sample credit taken):
 
-| Metric | SPY B&H | **Model (dial off)** |
-|---|---|---|
-| Total return | 312% | **817%** |
-| CAGR | 13.1% | **21.3%** |
-| Sharpe / Sortino | 0.79 / 0.96 | **1.09 / 1.68** |
-| Max drawdown | −33.7% | **−20.4%** |
+| Metric | SPY B&H | QQQ B&H | **Model (dial off)** |
+|---|---|---|---|
+| Total return | 312% | 595% | **817%** |
+| CAGR | 13.1% | 18.4% | **21.3%** |
+| Sharpe / Sortino | 0.79 / 0.96 | 0.89 / 1.13 | **1.09 / 1.68** |
+| Max drawdown | −33.7% | −35.1% | **−20.4%** |
 
 **Safety-dial evaluation, 2020–2026 only (strictly out-of-sample for the dial):**
 
-| Metric | Model dial OFF | **Model dial ON (deployed)** |
-|---|---|---|
-| Total return | 321% | **379%** |
-| CAGR | 25.1% | **27.6%** |
-| Sharpe / Sortino | 1.11 / 1.80 | **1.30 / 2.01** |
-| Max drawdown | −20.8% | **−17.1%** |
-| Beta / down-capture | 0.59 / 65% | **0.47 / 52%** |
+| Metric | SPY B&H | QQQ B&H | **Model dial ON (deployed)** |
+|---|---|---|---|
+| Total return | 152% | 254% | **339%** |
+| CAGR | 15.3% | 21.5% | **25.6%** |
+| Sharpe / Sortino | 0.81 / 0.99 | 0.91 / 1.20 | **1.22 / 1.82** |
+| Max drawdown | −33.7% | −35.1% | **−19.6%** |
 
 In its out-of-sample window the dial improved *every* axis (it de-risked into the 2022 bear) — the basis
 for keeping it deployed as the low-correlation defensive leg of a multi-strategy portfolio.
