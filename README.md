@@ -69,24 +69,25 @@ dial-on results are only reported on its out-of-sample window below — no in-sa
 
 | Metric | SPY B&H | QQQ B&H | **Model (dial off)** |
 |---|---|---|---|
-| Total return | 312% | 595% | **817%** |
-| CAGR | 13.1% | 18.4% | **21.3%** |
-| Sharpe / Sortino | 0.79 / 0.96 | 0.89 / 1.13 | **1.09 / 1.68** |
-| Max drawdown | −33.7% | −35.1% | **−20.4%** |
+| Total return | 312% | 595% | **786%** |
+| CAGR | 13.1% | 18.4% | **20.9%** |
+| Sharpe / Sortino | 0.79 / 0.96 | 0.89 / 1.13 | **1.07 / 1.66** |
+| Max drawdown | −33.7% | −35.1% | **−20.9%** |
 
 **Safety-dial evaluation, 2020–2026 only (strictly out-of-sample for the dial):**
 
 | Metric | SPY B&H | QQQ B&H | **Model dial ON (deployed)** |
 |---|---|---|---|
-| Total return | 152% | 254% | **339%** |
-| CAGR | 15.3% | 21.5% | **25.6%** |
-| Sharpe / Sortino | 0.81 / 0.99 | 0.91 / 1.20 | **1.22 / 1.82** |
+| Total return | 152% | 254% | **330%** |
+| CAGR | 15.3% | 21.5% | **25.2%** |
+| Sharpe / Sortino | 0.81 / 0.99 | 0.91 / 1.20 | **1.20 / 1.79** |
 | Max drawdown | −33.7% | −35.1% | **−19.6%** |
 
 In its out-of-sample window the dial improved *every* axis (it de-risked into the 2022 bear) — the basis
 for keeping it deployed as the low-correlation defensive leg of a multi-strategy portfolio.
 
-*(Backtest on a survivorship-bounded 13F universe with cost modeling; live paper-traded since June 2026
+*(Backtest on a survivorship-bounded 13F universe with cost modeling **and gap-through stop slippage**
+(stops that gap down through their level fill at the lower open, not the stop price); live paper-traded since June 2026
 under an execution-integrity shakedown. **Absolute levels are survivorship-flattered** — the claims defended
 are the *relative/structural* ones: lower beta, shallower drawdown, higher Sortino, and the process. Honest
 limits documented: the safety dial is a macro/credit-stress detector that **caught the 2022 bear but missed
@@ -125,6 +126,7 @@ FRED macro (AAA yield…)   ┘        │  (ROE, FCF/assets, accruals, Merton D
   multi-model valuation engine → automated brokerage execution) paper-trading a ~40-name portfolio
 - Designed an anti-overfitting validation harness (walk-forward, CPCV, PBO, Deflated Sharpe) that
   rejected 12 of 15 candidate signals and caught two look-ahead biases before deployment
-- Backtested to Sharpe 1.15 / Sortino 1.77 / −19% max-drawdown at beta 0.54 vs SPY 0.79 / −34% over
-  2014–2025, via a macro safety dial + an iv-discount sizing tilt, with a layered whipsaw-free crash
-  defense (stops, gap-through exit, market-gap entry-pause) validated to beat every sell-on-weakness rule
+- Backtested to Sharpe 1.07–1.20 / Sortino 1.66–1.79 / ~−20% max-drawdown at beta ~0.5 vs SPY 0.79 /
+  −34% over 2014–2025 (gap-through stop slippage modeled), via a macro safety dial + an iv-discount
+  sizing tilt, with a layered whipsaw-free crash defense (stops, gap-through exit, market-gap
+  entry-pause) validated to beat every sell-on-weakness rule
