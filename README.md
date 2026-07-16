@@ -74,14 +74,14 @@ dial-on results are only reported on its out-of-sample window below — no in-sa
 | Sharpe / Sortino *(excess of T-bills)* | 0.70 / 0.85 | 0.81 / 1.04 | **0.97 / 1.51** |
 | Max drawdown | −33.7% | −35.1% | **−20.9%** |
 
-**Safety-dial evaluation, 2020–2026 only (strictly out-of-sample for the dial):**
+**Safety-dial evaluation, 2020-01 → 2025-06 (strictly out-of-sample for the dial):**
 
-| Metric | SPY B&H | QQQ B&H | **Model dial ON (deployed)** |
-|---|---|---|---|
-| Total return | 152% | 254% | **330%** |
-| CAGR | 15.3% | 21.5% | **25.2%** |
-| Sharpe / Sortino *(excess of T-bills)* | 0.67 / 0.83 | 0.79 / 1.05 | **1.06 / 1.59** |
-| Max drawdown | −33.7% | −35.1% | **−19.6%** |
+| Metric | SPY B&H | **Model dial ON (deployed)** |
+|---|---|---|
+| Total return | 106% | **272%** |
+| CAGR | 14.1% | **27.0%** |
+| Sharpe / Sortino *(excess of T-bills)* | 0.60 / 0.75 | **1.11 / 1.67** |
+| Max drawdown | −33.7% | **−19.6%** |
 
 The dial is held as **explicitly-priced insurance, not alpha**: regime decomposition shows its one
 genuine win is the slow/grinding bear (2022: drawdown halved, −7.7% vs −18.2% without it) — the only
@@ -130,7 +130,7 @@ FRED macro (AAA yield…)   ┘        │  (ROE, FCF/assets, accruals, Merton D
   multi-model valuation engine → automated brokerage execution) paper-trading a ~40-name portfolio
 - Designed an anti-overfitting validation harness (walk-forward, CPCV, PBO, Deflated Sharpe) that
   rejected 12 of 15 candidate signals and caught two look-ahead biases before deployment
-- Backtested to Sharpe 0.97–1.06 / Sortino 1.51–1.59 excess-of-T-bills / ~−20% max-drawdown at beta
+- Backtested to Sharpe 0.97–1.11 / Sortino 1.51–1.67 excess-of-T-bills / ~−20% max-drawdown at beta
   ~0.5 vs SPY 0.70 / −34% over 2014–2025 (gap-through stop slippage modeled, lot-true after-tax
   accounting), via a macro safety dial + an iv-discount sizing tilt, with a layered whipsaw-free crash
   defense (stops, gap-through exit, market-gap entry-pause) validated to beat every sell-on-weakness rule
