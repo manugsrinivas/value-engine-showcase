@@ -1,9 +1,9 @@
 # The Negative-Results Ledger
 
-> Most quant write-ups show what worked. This project's most valuable asset is the documented record
-> of what *didn't* — each entry below was a plausible, literature-backed idea that failed a
-> pre-registered validation gauntlet on point-in-time data. Signal families are named; live
-> thresholds and tuned parameters are intentionally omitted.
+> Most quant write-ups show what worked. I think the most valuable thing I built here is the record
+> of what *didn't* — each entry below is a plausible, literature-backed idea I tested and killed
+> through a pre-registered validation gauntlet on point-in-time data. I name the signal families;
+> the live thresholds and tuned parameters are deliberately omitted.
 
 ## Rejected signal families (and why)
 
@@ -27,6 +27,7 @@
 | **Periodic rebalancing (all cadences tested)** | Portfolio hygiene | Every rebalance-to-target variant destroyed returns vs letting winners run |
 | **Revenue-vs-price divergence veto** | Literature: markets eventually pay for revenue that price hasn't followed | Trade-level signal genuinely strong (monotonic, orthogonal to the value screen) — but the portfolio gain (+375pp!) was a pure concentration artifact: with the production position cap applied it *reversed* on every axis. The definitive lesson in trade-level vs portfolio-level truth |
 | **Daily-loss circuit breaker** | Flatten to cash after a big down day | Hurts every metric and *deepens* drawdown — the down days cluster in volatile recoveries, so it flattens into the bounce and re-enters higher (whipsaw). Same failure as every sell-on-weakness rule: a dip-buying book must not sell dips |
+| **Macro-dial restructuring (4 studies, 15 variants)** | Replace/improve the trained regime dial: transparent rules, regime gating, tax-aware sell selection, passive de-risk, smoothed signals | All rejected — each instructively: simple rules lack the trained signal's lead-time; a passive de-risk action that dominated at zero lag lost its whole edge to ONE day of realistic latency; tax-aware trim selection targeted a channel ~20× smaller than assumed; conviction-gating sold *lower* (graded early de-risking was the value all along) |
 
 ## What survived (the pattern)
 

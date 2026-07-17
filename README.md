@@ -1,77 +1,76 @@
-# Systematic Value Investment Engine — Project Showcase
+# Systematic Value Investment Engine
 
-> Resume/portfolio-ready description of this project. Safe to publish as a standalone README
-> (contains methodology + engineering narrative, no proprietary signal parameters or account data).
+This is the research and engineering record of a fully-automated systematic value investing
+platform I built and paper-trade live: it screens ~2,100 US equities nightly using point-in-time
+SEC XBRL fundamentals, values each name with multiple independent models (DCF, Graham Number,
+rate-anchored Graham Revised, Earnings Power Value), applies validated quality/distress gates
+(Sloan accruals, Merton distance-to-default, Altman Z″), sizes a ~40-name breadth portfolio with
+defensive tilts, and executes autonomously on a brokerage API — protective-stop management,
+corporate-action handling, cash-settlement-aware order logic and all.
 
-## One-paragraph summary (for a resume or repo tagline)
+What I've published here is the **methodology and the engineering story** — the parts I think are
+worth reading. The live signal parameters, thresholds, and account details stay private; the
+process is the point.
 
-A fully-automated, end-to-end **systematic value investing platform**: it screens ~2,100 US equities
-nightly using point-in-time SEC XBRL fundamentals, values each name with multiple independent models
-(DCF, Graham Number, rate-anchored Graham Revised, Earnings Power Value), applies validated
-quality/distress gates (Sloan accruals, Merton distance-to-default, Altman Z″), sizes a ~40-name
-breadth portfolio with defensive tilts, and executes autonomously on a brokerage API with
-protective-stop management, corporate-action handling, and cash-settlement-aware order logic — all
-validated through an institutional-grade anti-overfitting harness (walk-forward, combinatorially
-purged cross-validation, Probability of Backtest Overfitting, Deflated Sharpe Ratio).
+## Why I thought this was worth building
 
-## What it demonstrates (skills matrix)
+I wanted to know whether a disciplined individual — with free data, honest statistics, and enough
+engineering — could build a value strategy whose claims survive the same scrutiny I'd apply to
+anyone else's backtest. That meant treating my own results as adversarially as possible: every
+signal had to survive a pre-registered validation gauntlet (walk-forward, combinatorially purged
+CV, Probability of Backtest Overfitting, Deflated Sharpe), every headline number had to survive
+forensic re-measurement, and every rejected idea had to be documented well enough that I'd never
+accidentally re-test it. Roughly four of every five ideas I tried died under that process — and
+the record of *how* they died turned out to be the most valuable thing in the repo.
 
-| Domain | Concrete evidence in this project |
-|---|---|
-| **Quant research methodology** | CSCV-PBO, Deflated Sharpe, CPCV regime distributions, walk-forward CV, cluster-robust inference; every signal pre-registered with kill criteria |
-| **Financial modeling** | IV/DCF engine, Graham Number/Revised, EPV, Merton structural credit (distance-to-default), Altman Z″, Sloan accruals, Beneish M-score, reverse-DCF implied expectations |
-| **Point-in-time data engineering** | SEC XBRL companyfacts parsed by *filing date* (never period date) — leak-free by construction; split-safe market caps from raw shares × split-factor reconciliation; 271-feature engineered panels with schema-versioned parquet caching |
-| **Live trading systems** | Scheduled morning/evening execution loops on a brokerage API; buying-power-aware order sizing; wash-trade-safe stop re-arming; corporate-action (split) state re-anchoring; naked-position auto-arm sweeps; T+1 cash-settlement handling |
-| **ML with honest evaluation** | XGBoost vol-regime + triple-barrier classifiers built, then **demoted to monitoring-only** after out-of-sample AUC ≈ 0.51 — the discipline to not deploy ML that doesn't validate |
-| **Negative-result rigor** | ~15 overlays tested, ~12 rejected with documented, reproducible nulls (momentum, dividend/revenue growth, insider Form 4, analyst revisions, sector caps, size floors…) |
-| **Software engineering** | Monorepo with research/live separation, env-knob A/B harness, resumable block scrapers, self-healing schedulers, git audit trail, weekly auto-generated monitoring reports |
+## What I'd highlight
 
-## The intellectual core (what makes it interesting to talk about)
+1. **The screen is the edge; overlays mostly aren't.** Fifteen fundamental overlays went through
+   the same gauntlet. Nearly all failed — including several that *looked* additive until a clean
+   point-in-time re-test exposed look-ahead bias (a market-cap floor "added 200%" until market
+   caps were reconstructed as-of trade date). The survivors share one shape: **orthogonal LEVEL
+   vetoes** (solvency, earnings quality, data completeness) rather than trend/health gates, which
+   systematically amputate the beaten-down re-raters that carry a value book's P&L.
 
-1. **"The screen is the edge; overlays mostly aren't."** Fifteen fundamental overlays were tested
-   through the same gauntlet. Nearly all failed — including several that *looked* additive until a
-   clean point-in-time re-test exposed look-ahead bias (e.g., a market-cap floor that "added 200%"
-   until market caps were reconstructed as-of trade date). The survivors share one shape:
-   **orthogonal LEVEL vetoes** (solvency, earnings quality, data completeness) rather than
-   trend/health gates, which systematically amputate the beaten-down re-raters that carry the P&L.
+2. **Harvest edges as breadth-preserving *tilts*, not gates.** Deeper-discount entries genuinely
+   earn more (+3.3% vs −0.9% per trade), but *tightening the value gate* to capture that was a
+   concentration mirage. The validated way to harvest it was a continuous sizing tilt — overweight
+   the cheapest names while every name stays held. The same principle rejected momentum filters
+   and every daily-loss circuit breaker I tried: **a dip-buying book must never sell or filter
+   away weakness — that fights its own edge.**
 
-2. **Exploit edges as breadth-preserving *tilts*, not gates.** A margin-of-safety decomposition showed
-   deeper-discount entries genuinely earn more (+3.3% vs −0.9% per trade), but *tightening the value
-   gate* to capture it was a concentration mirage (non-monotonic, breadth collapsing 41→30 names). The
-   validated way to harvest the edge was a continuous **iv-discount sizing tilt** — overweight the
-   cheapest names while *every* name stays held — which beat the prior multi-model-confluence tilt on
-   every axis and in all four walk-forward folds with breadth intact. The same principle rejected the
-   value-gate tightening, momentum, and a daily-loss circuit breaker: **a dip-buying book must never
-   sell (or filter away) weakness — that fights its own edge.**
+3. **Test additions on top of the deployed model, not a naive baseline** — redundancy then shows
+   up as harm instead of stolen credit. This surfaced both a redundancy trap (an earnings-yield
+   lens that duplicated the deployed earnings-power model; stacking them deepened drawdowns) and a
+   genuine positive interaction (a distress red-flag gate that makes a stronger sizing tilt safe).
 
-3. **Interaction-aware combination testing.** The model was built by testing signals 1-by-1 *on top of*
-   the live configuration (so redundancy shows up as harm, not double-counted credit) — surfacing both
-   a redundancy trap (mid-cycle earnings yield ≈ the already-live earnings-power model; stacking deepened
-   drawdowns) and a genuine positive interaction (a distress red-flag gate makes a stronger sizing tilt
-   safe by pruning the traps it would otherwise over-weight).
+4. **Defense in layers, never whipsaw.** The optimization target was drawdown resilience, not raw
+   return. Fast crashes are handled by position stops plus a redeploy engine (in the COVID crash
+   the screen bought at 55%-below-value discounts and those trades returned +43%); slow credit
+   bears are handled by a macro dial that scales into T-bills. When I later ran four pre-registered
+   studies trying to *replace* that dial (15 variants: transparent rules, regime gating, tax-aware
+   actions, smoothed signals), every challenger died — several in instructive ways (a variant that
+   dominated at zero signal lag lost its entire edge to a single day of realistic latency). The
+   original design survived because its warmth is *informed*, not mechanical.
 
-4. **Layered, whipsaw-free crash defense.** The optimization target was **drawdown resilience**, not raw
-   return. A synthetic fast-crash on the live book quantified it: an *orderly* crash caps the loss at the
-   average stop distance (~−9%), while the irreducible tail is an *overnight gap-down* (stops slip). The
-   response was a **layered** defense that never whipsaws — position stops, a gap-through-stop exit, a low
-   ~0.5 beta (0.47 in the dial's out-of-sample window), a macro dial for slow/credit crashes, and a market-gap *entry pause* (don't buy the falling
-   knife) — plus the **redeploy engine**: in the COVID crash the screen bought at 55%-below-IV discounts
-   and those trades returned +43%, turning the drawdown into the book's best inventory. Every *selling*
-   crash-rule tested (daily-loss circuit breaker, gap-sell) was rejected for whipsawing the recovery.
+5. **The forensics habit.** Numbers only count here if they survive four independent checks:
+   accounting identities to the penny, an independent from-scratch recomputation, a bottom-up
+   decomposition, and regeneration with a measured noise floor. That habit caught real bugs in my
+   own results — phantom taxable gains from a broken lot ledger, one corrupt T-bill bar that
+   compounded into ~23 points of fake return, Sharpe quoted on a zero-risk-free basis, and an
+   evaluation window that ran 14 months past the data's coverage. Each fix shipped with a guard so
+   the same class of error can't silently recur.
 
-## Validation results (final deployed config vs. the market; all figures total-return)
+## Validation results (final deployed config; all figures total-return, Sharpe/Sortino excess of T-bills)
 
-Final config: IV/DCF value screen + quality/distress gates + **iv-discount sizing tilt** + **LTCG-aware
-one-year hold** + a **macro safety dial** (scales to T-bills in credit/macro stress).
-
-**Full multi-regime window, 2014–2025 — dial OFF** (the dial is a model *trained on 2008–2019*, so
-dial-on results are only reported on its out-of-sample window below — no in-sample credit taken):
+**Full multi-regime window, 2014–2025 — dial OFF** (the dial is trained on 2008–2019, so dial-on
+results are only reported on its out-of-sample window below — no in-sample credit taken):
 
 | Metric | SPY B&H | QQQ B&H | **Model (dial off)** |
 |---|---|---|---|
 | Total return | 312% | 595% | **762%** |
 | CAGR | 13.1% | 18.4% | **20.6%** |
-| Sharpe / Sortino *(excess of T-bills)* | 0.70 / 0.85 | 0.81 / 1.04 | **0.97 / 1.51** |
+| Sharpe / Sortino | 0.70 / 0.85 | 0.81 / 1.04 | **0.97 / 1.51** |
 | Max drawdown | −33.7% | −35.1% | **−20.9%** |
 
 **Safety-dial evaluation, 2020-01 → 2025-06 (strictly out-of-sample for the dial):**
@@ -80,26 +79,26 @@ dial-on results are only reported on its out-of-sample window below — no in-sa
 |---|---|---|
 | Total return | 106% | **272%** |
 | CAGR | 14.1% | **27.0%** |
-| Sharpe / Sortino *(excess of T-bills)* | 0.60 / 0.75 | **1.11 / 1.67** |
+| Sharpe / Sortino | 0.60 / 0.75 | **1.11 / 1.67** |
 | Max drawdown | −33.7% | **−19.6%** |
 
 The dial is held as **explicitly-priced insurance, not alpha**: regime decomposition shows its one
-genuine win is the slow/grinding bear (2022: drawdown halved, −7.7% vs −18.2% without it) — the only
-slow-bear defense in the stack — while in fast V-crashes it reacts late (it *hurt* the 2020 COVID year),
-and its de-risking trims realize short-term gains, costing ~1.7pp/yr after-tax. Full-path return
-differences between dial-on and dial-off are within path-dependency noise; the honest case for the dial
-is the 2022-regime protection, priced and disclosed.
+genuine win is the slow/grinding bear (2022: drawdown halved, −7.7% vs −18.2% without it), while in
+fast V-crashes it reacts late, and its de-risking trims cost ~1.7pp/yr after tax. I keep it because
+a slow bear is the one storm nothing else in the stack can see coming.
 
-*(Backtest on a survivorship-bounded 13F universe with cost modeling **and gap-through stop slippage**
-(stops that gap down through their level fill at the lower open, not the stop price); live paper-traded since June 2026
-under an execution-integrity shakedown. **Absolute levels are survivorship-flattered** — the claims defended
-are the *relative/structural* ones: lower beta, shallower drawdown, higher Sortino, and the process. Honest
-limits documented: the safety dial is a macro/credit-stress detector that **caught the 2022 bear but missed
-the fast COVID shock**; the book's COVID resilience came from position stops + crash-discount redeploy, not
-the dial; a true 2008 replay is infeasible on free data (machine-readable fundamentals begin 2009). The
-crash tail — an overnight gap-down that slips through stops — is real and unhedged beyond the low starting beta.)*
+## Where the model loses — and why I publish that
 
-## Architecture sketch
+Absolute levels above are survivorship-flattered (documented and bounded; a clean-data replay is
+gated before any real capital). Beyond that, the model has honest structural losses I'd rather
+state than have discovered: it goes flat in **value-factor winters** (2015-16-type — cheap keeps
+getting cheaper, and the edge *is* the exposure); it cannot track **mega-cap concentration
+rallies** (2023-type — a value screen will never own the index's seven largest growth names); it
+wins raw returns but loses *smoothness* in low-vol grind-up bulls; and after tax, a buy-and-hold
+QQQ is the one benchmark it doesn't beat — deferral is uncatchable compounding, which is exactly
+why this book is the defensive leg of a multi-strategy portfolio rather than the growth leg.
+
+## Architecture
 
 ```
 SEC XBRL (point-in-time) ─┐
@@ -107,30 +106,23 @@ Alpaca market data        ├─> nightly screen: IV/DCF value filter + quality 
 FRED macro (AAA yield…)   ┘        │  (ROE, FCF/assets, accruals, Merton DD, Altman-Z″ redflag,
 13F institutional filings          │   data-completeness fail-closed gate)
                                    ▼
-                    iv-discount + confluence signals ──> sizing tilt (yield-weight × deep-discount overweight)
+                    valuation-confluence signals ──> sizing tilt (yield-weight × deep-discount overweight)
                                    ▼
-                    candidate CSV -> morning executor (bracket entries, protective stops,
+                    candidate CSV -> morning executor (entries, protective stops,
                     BP-aware sizing, corp-action guard, naked-position sweep)
                                    ▼
-                    evening manager (partial TP / runners / 260-bar LTCG hold renewal / SGOV macro dial)
+                    evening manager (partial TP / runners / LTCG-aware holds / macro dial)
                                    ▼
                     weekly holdings thesis report + monitoring pack (auto-generated)
 ```
 
-## How to present this publicly (see note)
+## The deep dives
 
-**Suggested repo structure for a public showcase** (methodology without the edge):
-- This README (or an expanded version with charts)
-- The validation-harness write-up (PBO/DSR/CPCV methodology + the negative-results ledger)
-- Architecture diagrams + a sanitized excerpt of the monitoring report
-- **Not** the signal parameters, threshold values, config files, or account details
-
-**Resume bullets (pick 2-3):**
-- Built an end-to-end systematic value-investing platform (SEC XBRL point-in-time pipeline →
-  multi-model valuation engine → automated brokerage execution) paper-trading a ~40-name portfolio
-- Designed an anti-overfitting validation harness (walk-forward, CPCV, PBO, Deflated Sharpe) that
-  rejected 12 of 15 candidate signals and caught two look-ahead biases before deployment
-- Backtested to Sharpe 0.97–1.11 / Sortino 1.51–1.67 excess-of-T-bills / ~−20% max-drawdown at beta
-  ~0.5 vs SPY 0.70 / −34% over 2014–2025 (gap-through stop slippage modeled, lot-true after-tax
-  accounting), via a macro safety dial + an iv-discount sizing tilt, with a layered whipsaw-free crash
-  defense (stops, gap-through exit, market-gap entry-pause) validated to beat every sell-on-weakness rule
+- **[The Negative-Results Ledger](docs/NEGATIVE_RESULTS.md)** — every idea that failed the
+  gauntlet, with the mechanism of failure. I think this is the most valuable document in the repo.
+- **[Validation Methodology](docs/VALIDATION_METHODOLOGY.md)** — the pre-registered gauntlet
+  (PBO, Deflated Sharpe, CPCV, walk-forward, cluster-robust inference) and the look-ahead
+  incidents it caught before deployment.
+- **[Execution Engineering](docs/EXECUTION_ENGINEERING.md)** — the unglamorous half: the
+  execution-layer failure classes a live system actually hits (wash-trade collisions, naked-stop
+  windows, settlement races, corporate actions) and the engineering that closed each one.
