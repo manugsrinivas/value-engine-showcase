@@ -116,6 +116,16 @@ FRED macro (AAA yield…)   ┘        │  (ROE, FCF/assets, accruals, Merton D
                     weekly holdings thesis report + monitoring pack (auto-generated)
 ```
 
+## Show me the code
+
+Prose is cheap; [**`src/`**](src/) has the runnable pieces — all generic infrastructure or textbook
+financial math (the strategy's actual edge stays private). Highlights: a [lot-true tax
+engine](src/tax_engine/), a [backtest-audit challenge](src/forensics_challenge/) with four planted
+bugs, the [anti-overfitting statistics](src/validation_stats/) (PBO / Deflated Sharpe /
+cluster-robust inference), [cash-account execution patterns](src/execution_patterns/), [point-in-time
+XBRL + distress formulas](src/pit_fundamentals/), and an [honest cash-sim skeleton](src/cash_sim/).
+Most have a zero-setup `python <file>.py` self-demo.
+
 ## The deep dives
 
 - **[The Negative-Results Ledger](docs/NEGATIVE_RESULTS.md)** — every idea that failed the

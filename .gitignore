@@ -3,3 +3,6 @@
 *.parquet
 *.csv
 *.json
+src/forensics_challenge/toy-strat/
+__pycache__/
+*.pyc
