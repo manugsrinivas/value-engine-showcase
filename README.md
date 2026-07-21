@@ -5,7 +5,7 @@ platform I built and paper-trade live: it screens ~2,100 US equities nightly usi
 SEC XBRL fundamentals, values each name with multiple independent models (DCF, Graham Number,
 rate-anchored Graham Revised, Earnings Power Value), applies validated quality/distress gates
 (Sloan accruals, Merton distance-to-default, Altman Z″), sizes a ~40-name breadth portfolio with
-defensive tilts, and executes autonomously on a brokerage API — protective-stop management,
+defensive tilts, and executes autonomously on a trading API — protective-stop management,
 corporate-action handling, cash-settlement-aware order logic and all.
 
 What I've published here is the **methodology and the engineering story** — the parts I think are
