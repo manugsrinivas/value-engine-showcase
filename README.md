@@ -61,31 +61,48 @@ the record of *how* they died turned out to be the most valuable thing in the re
    evaluation window that ran 14 months past the data's coverage. Each fix shipped with a guard so
    the same class of error can't silently recur.
 
-## Validation results (final deployed config; all figures total-return, Sharpe/Sortino excess of T-bills)
+## Validation results (fully audited, 2026-07-29; all figures total-return, Sharpe excess of T-bills)
 
-**Full multi-regime window, 2014–2025 — dial OFF** (the dial is trained on 2008–2019, so dial-on
-results are only reported on its out-of-sample window below — no in-sample credit taken):
+These numbers are the FIFTH measurement of this strategy — each prior set was retired when an
+adversarial audit found a data or methodology defect (EPS reconstruction, unscaled share counts,
+look-ahead beta, stale panel vintage, window tails past the last enterable cohort, an untaxed
+benchmark, and a macro-timing leak in the risk dial's training features). The audit trail is the
+point: every defect was found by attacking my own results, and the corrections were published even
+though they made the numbers worse.
+
+**Full multi-regime window, 2014-01 → 2025-09 — dial OFF:**
 
 | Metric | SPY B&H | QQQ B&H | **Model (dial off)** |
 |---|---|---|---|
-| Total return | 312% | 595% | **762%** |
-| CAGR | 13.1% | 18.4% | **20.6%** |
-| Sharpe / Sortino | 0.70 / 0.85 | 0.81 / 1.04 | **0.97 / 1.51** |
-| Max drawdown | −33.7% | −35.1% | **−20.9%** |
+| Total return | 346% | 658% | **+321%** |
+| CAGR | 13.6% | 18.8% | **13.0%** |
+| Sharpe | 0.72 | — | **0.62** |
+| Max drawdown | −33.7% | −35.1% | **−29.5%** |
+| After-tax CAGR (liq, $72k NJ) | 11.8% | 16.8% | **9.7%** |
 
-**Safety-dial evaluation, 2020-01 → 2025-06 (strictly out-of-sample for the dial):**
+**Read that honestly: the raw screen does NOT beat buy-and-hold over the full cycle** — it loses
+on return, Sharpe and after-tax, winning only on drawdown. Publishing that is deliberate.
+
+**Deployed configuration — dial ON, out-of-sample 2020-01 → 2025-09** (the dial is trained
+strictly on 2008–2019 with a 63-day embargo at the boundary; its training features carry explicit
+FRED publication lags so it cannot see unpublished macro):
 
 | Metric | SPY B&H | **Model dial ON (deployed)** |
 |---|---|---|
-| Total return | 106% | **272%** |
-| CAGR | 14.1% | **27.0%** |
-| Sharpe / Sortino | 0.60 / 0.75 | **1.11 / 1.67** |
-| Max drawdown | −33.7% | **−19.6%** |
+| Total return | 123% | **+223%** |
+| CAGR | 15.0% | **22.6%** |
+| Sharpe | 0.64 | **0.92** |
+| Max drawdown | −33.7% | **−21.3%** |
+| After-tax CAGR (liq) | 12.6% | **~17.4%** |
 
-The dial is held as **explicitly-priced insurance, not alpha**: regime decomposition shows its one
-genuine win is the slow/grinding bear (2022: drawdown halved, −7.7% vs −18.2% without it), while in
-fast V-crashes it reacts late, and its de-risking trims cost ~1.7pp/yr after tax. I keep it because
-a slow bear is the one storm nothing else in the stack can see coming.
+The deployed claim survives audit: index-beating return at two-thirds the drawdown, pre- and
+post-tax, on a strictly out-of-sample window. Neither configuration beats QQQ buy-and-hold
+(18.8%/yr full-window) — this book is the defensive leg of a larger stack whose growth leg holds
+the QQQ exposure; it is not a QQQ substitute. The risk dial's one genuine skill is the slow bear
+(2022: risk score 0.84 for months); it does NOT see fast crashes (COVID: 0.01) — those are
+handled by stop-losses + a cash-redeploy engine, and the two mechanisms are complementary by
+design, not by luck. Overfitting-probability (PBO/CSCV) re-verification on the corrected data is
+in progress and will be added here.
 
 ## Where the model loses — and why I publish that
 
