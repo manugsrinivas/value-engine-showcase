@@ -101,8 +101,12 @@ post-tax, on a strictly out-of-sample window. Neither configuration beats QQQ bu
 the QQQ exposure; it is not a QQQ substitute. The risk dial's one genuine skill is the slow bear
 (2022: risk score 0.84 for months); it does NOT see fast crashes (COVID: 0.01) — those are
 handled by stop-losses + a cash-redeploy engine, and the two mechanisms are complementary by
-design, not by luck. Overfitting-probability (PBO/CSCV) re-verification on the corrected data is
-in progress and will be added here.
+design, not by luck. Overfitting re-verification (CSCV, 12,870 splits over the 4 calibration variants actually
+tested): **Deflated Sharpe 0.989** — the strategy's Sharpe survives the multiple-testing
+haircut at 95%. PBO across the variants is 0.91, which says the CALIBRATION choice among
+four near-identical configurations (return corr 0.80–0.89) is not statistically separable —
+so the chosen calibration rests on a-priori valuation convention, and no variant-vs-variant
+delta is claimed as skill. Both numbers published as measured.
 
 ## Where the model loses — and why I publish that
 
