@@ -90,10 +90,16 @@ FRED publication lags so it cannot see unpublished macro):
 | Metric | SPY B&H | **Model dial ON (deployed)** |
 |---|---|---|
 | Total return | 123% | **+223%** |
-| CAGR | 15.0% | **22.6%** |
-| Sharpe | 0.64 | **0.92** |
-| Max drawdown | −33.7% | **−21.3%** |
-| After-tax CAGR (liq) | 12.6% | **~17.4%** |
+| CAGR | 15.0% | **~22%** *(21.6–22.6% across start-date jitter)* |
+| Sharpe | 0.64 | **~0.9** *(0.89–0.92)* |
+| Max drawdown | −33.7% | **≈−21%** *(−20.2 to −21.3)* |
+| After-tax CAGR (liq) | 12.6% | **≥17.4%** *(tax model slightly over-taxes; see note)* |
+
+*Point estimates above are deliberately reported as ranges: a regeneration test (jittering the
+simulation start date) moves the CAGR by ~±0.5pp, so citing 22.6% to the decimal would be false
+precision. The independent verification pass also confirmed the accounting identity to $0.00 and
+reproduced every statistic from the raw equity curve; the after-tax figure is conservative because
+the lot ledger taxes P&L gross of transaction costs (commissions adjust basis in reality).*
 
 The deployed claim survives audit: index-beating return at two-thirds the drawdown, pre- and
 post-tax, on a strictly out-of-sample window. Neither configuration beats QQQ buy-and-hold
