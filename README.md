@@ -93,7 +93,7 @@ FRED publication lags so it cannot see unpublished macro):
 | CAGR | 15.0% | **~22%** *(21.6–22.6% across start-date jitter)* |
 | Sharpe | 0.64 | **~0.9** *(0.89–0.92)* |
 | Max drawdown | −33.7% | **≈−21%** *(−20.2 to −21.3)* |
-| After-tax CAGR (liq) | 12.6% | **≥17.4%** *(tax model slightly over-taxes; see note)* |
+| After-tax CAGR (liq) | 12.6% | **~17.4%** *(17.39% measured; conservative — see note)* |
 
 *Point estimates above are deliberately reported as ranges: a regeneration test (jittering the
 simulation start date) moves the CAGR by ~±0.5pp, so citing 22.6% to the decimal would be false
@@ -113,6 +113,30 @@ haircut at 95%. PBO across the variants is 0.91, which says the CALIBRATION choi
 four near-identical configurations (return corr 0.80–0.89) is not statistically separable —
 so the chosen calibration rests on a-priori valuation convention, and no variant-vs-variant
 delta is claimed as skill. Both numbers published as measured.
+
+### What defends what — and the quadrant that nothing defends
+
+Two independent risk mechanisms run underneath the screen. Both were finally tested this week with
+*mechanism-matched controls* — the test that asks "would a dumb version of this do just as well?"
+The result replaced a comfortable assumption with a map, and the map has a hole in it:
+
+| Regime | Defended by | Evidence |
+|---|---|---|
+| **Fast crash** (COVID-style) | stop-losses + cash redeploy | Stopped book finished 2020 at **+57.2%** (DD −20.2%) vs **+27.5%** (DD −46.5%) unstopped. **75% of that year's P&L came from positions opened *after* the March-23 bottom**, financed by stop exits that realised only −$9.3k — roughly a 6× return on the cost of stopping out. The macro dial is blind here (it scored 0.00 through the crash). |
+| **Rate-driven bear** (2022, 2018Q4) | the macro dial | **+9.33pp CAGR / +0.267 Sharpe** versus an exposure-matched constant-weight control holding the same *average* equity. Every constant weight scores Sharpe 0.66 — static de-levering cannot raise Sharpe — while the dial reaches 0.92. That gap is timing value by construction. |
+| **Slow, non-rate bear** (2011 sovereign, 2015-16 commodity) | **nothing** | Walk-forward CV across four out-of-sample folds: AUC **0.500 / 0.502 / 0.688 / 0.708**. The dial has genuine skill only in the rate-driven folds; in 2015-16 it sat *below its own median* during the selloff. And stops are actively **harmful** in slow bears (2022: −19.5% stopped vs −12.9% unstopped — whipsaw). |
+
+**So the dial is a rate-regime detector, not crash insurance.** Its evidence base is two
+out-of-sample episodes of the *same* stress type, not four of varied types. I publish that
+distinction because it changes what the strategy may honestly be sold as: the fast-crash defense is
+mechanism-backed and strong, the rate-bear defense is real but narrow, and a 2011-style grind has no
+signal behind it at all — only position caps, breadth, and the cash the screen holds when little is
+cheap.
+
+A caveat I keep attached to the dial result: out-of-sample AUC rises monotonically with training
+size (690 rows → 0.500, 2,954 → 0.708), so "it needs ~8 years of data" is an equally consistent
+reading of the failures. Both readings counsel the same restraint — don't assume it generalises to
+a stress type it has never seen.
 
 ## Where the model loses — and why I publish that
 
