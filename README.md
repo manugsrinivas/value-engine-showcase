@@ -87,32 +87,92 @@ on return, Sharpe and after-tax, winning only on drawdown. Publishing that is de
 strictly on 2008–2019 with a 63-day embargo at the boundary; its training features carry explicit
 FRED publication lags so it cannot see unpublished macro):
 
+Reported on **both bases**, because mixing them flatters any actively-traded strategy: a
+buy-and-hold benchmark defers all capital-gains tax to a single terminal bill, while this book
+pays tax every year. Quoting a pre-tax Sharpe beside an after-tax CAGR would hide that.
+
+All figures below are from a **pinned, reproducible artifact** — candidate set, risk dial, price
+panels and code commit are all hashed, and the run regenerates the equity curve byte-identically.
+Window `2020-01-02 → 2025-08-29`, which is where the pinned candidate set can last open a position.
+
+**PRE-TAX** (all figures total-return; Sharpe excess of T-bills):
+
+| Metric | SPY B&H | QQQ B&H | **Model dial ON (deployed)** |
+|---|---|---|---|
+| Total return | +115.4% | +172.8% | **+204.5%** |
+| CAGR | 14.53% | 19.41% | **21.75%** |
+| Sharpe | 0.623 | 0.716 | **0.901** |
+| Max drawdown | −33.7% | −35.1% | **−20.1%** |
+
+**AFTER-TAX** (lot-true, single filer ~$72k NJ: 27.5% short / 20.5% long; SPY pays annual
+qualified-dividend tax plus one terminal liquidation bill):
+
 | Metric | SPY B&H | **Model dial ON (deployed)** |
 |---|---|---|
-| Total return | 123% | **+223%** |
-| CAGR | 15.0% | **~22%** *(21.6–22.6% across start-date jitter)* |
-| Sharpe | 0.64 | **~0.9** *(0.89–0.92)* |
-| Max drawdown | −33.7% | **≈−21%** *(−20.2 to −21.3)* |
-| After-tax CAGR (liq) | 12.6% | **~17.4%** *(17.39% measured; conservative — see note)* |
+| CAGR — hold | 12.15% | **17.37%** |
+| CAGR — liquidate | 12.15% | **16.70%** |
+| Sharpe | — | **0.720** |
+| Max drawdown | −33.7% | **−25.6%** |
 
-*Point estimates above are deliberately reported as ranges: a regeneration test (jittering the
-simulation start date) moves the CAGR by ~±0.5pp, so citing 22.6% to the decimal would be false
-precision. The independent verification pass also confirmed the accounting identity to $0.00 and
-reproduced every statistic from the raw equity curve; the after-tax figure is conservative because
-the lot ledger taxes P&L gross of transaction costs (commissions adjust basis in reality).*
+*Tax paid over the window: $45,580 on $158,909 of realized P&L. QQQ's after-tax column is omitted
+rather than carried over from a previous window — it has not been re-measured on this pin.*
 
-The deployed claim survives audit: index-beating return at two-thirds the drawdown, pre- and
-post-tax, on a strictly out-of-sample window. Neither configuration beats QQQ buy-and-hold
-(18.8%/yr full-window) — this book is the defensive leg of a larger stack whose growth leg holds
-the QQQ exposure; it is not a QQQ substitute. The risk dial's one genuine skill is the slow bear
-(2022: risk score 0.84 for months); it does NOT see fast crashes (COVID: 0.01) — those are
-handled by stop-losses + a cash-redeploy engine, and the two mechanisms are complementary by
-design, not by luck. Overfitting re-verification (CSCV, 12,870 splits over the 4 calibration variants actually
-tested): **Deflated Sharpe 0.989** — the strategy's Sharpe survives the multiple-testing
-haircut at 95%. PBO across the variants is 0.91, which says the CALIBRATION choice among
-four near-identical configurations (return corr 0.80–0.89) is not statistically separable —
-so the chosen calibration rests on a-priori valuation convention, and no variant-vs-variant
-delta is claimed as skill. Both numbers published as measured.
+> #### ⚠ Three caveats that must travel with the number above
+>
+> **1. The margin over SPY is not statistically significant.** The +7.22pp/yr spread has
+> **t = 0.70, p = 0.48**. Over 5.66 years the sampling error on the CAGR is ~9pp, so the honest
+> 95% confidence interval is roughly **4%–39%**. No benchmark this account could actually buy
+> reaches significance — the best is a cash-matched IWM at t = 1.93, still short of 1.96. At the
+> observed information ratio, separating this from luck would take **30–44 years** of track record.
+>
+> **2. Excluding 2020, the book only ties SPY** — 15.04% vs 14.32%, and it *loses* on Sharpe. The
+> headline margin is carried by the crash year.
+>
+> **3. 45.6% of lifetime P&L comes from a single entry cohort** (2020-04-02), whose entry date was
+> set by a library default in the simulator's quarterly calendar rather than by any model decision.
+>
+> A previous version of this file quoted **~22% CAGR / Sharpe 0.92 / −21.3% DD** with a
+> "21.6–22.6% jitter band". Those came from an earlier run whose artifacts were **not preserved**
+> and can no longer be audited. The jitter band is also **retired as an error bar**: it measured
+> *path noise* (same inputs, different start date), not the uncertainty of the return, and quoting
+> a ±0.5pp band for a quantity with a ±9pp standard error understates the uncertainty by more than
+> an order of magnitude.
+>
+> **The honest one-line summary is "promising and unproven", not "validated".**
+
+**The honest reading of the tax column.** The model's edge shrinks materially after tax: its
+Sharpe falls 0.92 → 0.74 and its drawdown deepens −21.3% → −27.0%, because annual tax payments
+come out of the equity curve at each year-end. The benchmarks barely move, because deferral is
+itself a structural advantage — QQQ closes from 2.4pp behind on CAGR to 1.0pp behind. What
+survives after tax is still real: higher return than both benchmarks, a better Sharpe and
+Sortino, and ~7pp less drawdown than SPY. But anyone comparing this to an index fund should use
+the after-tax table, not the pre-tax one.
+
+### Overfitting statistics — published as measured, including the one that got worse
+
+**Deflated Sharpe** (Bailey & López de Prado) haircuts the observed Sharpe for the number of
+configurations actually tried, plus skew and kurtosis. The figure depends on how honestly you count
+trials, so it is reported across a range rather than at the flattering end:
+
+| trials counted (N) | Deflated Sharpe |
+|---|---|
+| 4 — the calibration variants formally A/B-tested | 0.957 |
+| 20 | 0.908 |
+| **30 — an honest count of the configurations actually run** | **0.894** |
+| 100 | 0.850 |
+
+**At an honest trial count the Sharpe does NOT clear the conventional 0.95 bar.** An earlier
+version of this file reported "Deflated Sharpe 0.989 — survives the multiple-testing haircut at
+95%" on N = 4 and a since-superseded vintage. That claim is withdrawn: it was true only at the
+narrowest defensible trial count.
+
+**PBO** (Probability of Backtest Overfitting, CSCV over the four calibration variants) is **0.91**.
+That says the *choice among those four near-identical configurations* (return correlation 0.80–0.89)
+is not statistically separable — so the selected calibration rests on an a-priori valuation
+convention, and **no variant-versus-variant delta is claimed as skill**.
+
+Both numbers are published because they are unflattering. A repository that reports its overfitting
+diagnostics only when they pass is not reporting them.
 
 ### What defends what — and the quadrant that nothing defends
 
@@ -125,6 +185,23 @@ The result replaced a comfortable assumption with a map, and the map has a hole 
 | **Fast crash** (COVID-style) | stop-losses + cash redeploy | Stopped book finished 2020 at **+57.2%** (DD −20.2%) vs **+27.5%** (DD −46.5%) unstopped. **75% of that year's P&L came from positions opened *after* the March-23 bottom**, financed by stop exits that realised only −$9.3k — roughly a 6× return on the cost of stopping out. The macro dial is blind here (it scored 0.00 through the crash). |
 | **Rate-driven bear** (2022, 2018Q4) | the macro dial | **+9.33pp CAGR / +0.267 Sharpe** versus an exposure-matched constant-weight control holding the same *average* equity. Every constant weight scores Sharpe 0.66 — static de-levering cannot raise Sharpe — while the dial reaches 0.92. That gap is timing value by construction. |
 | **Slow, non-rate bear** (2011 sovereign, 2015-16 commodity) | **nothing** | Walk-forward CV across four out-of-sample folds: AUC **0.500 / 0.502 / 0.688 / 0.708**. The dial has genuine skill only in the rate-driven folds; in 2015-16 it sat *below its own median* during the selloff. And stops are actively **harmful** in slow bears (2022: −19.5% stopped vs −12.9% unstopped — whipsaw). |
+
+> **Added 2026-08-26 — the dial's net contribution over the DEPLOYED window is not positive.** The
+> `+9.33pp` above is measured *inside the rate-bear windows where the dial fires*. Measured across
+> the whole deployed 2020+ window instead, it contributes **0.00pp of drawdown protection and comes
+> out ~1.7pp behind an exposure-matched constant weight** — because `risk_score` averaged **0.001
+> (max 0.002) through the entire COVID crash** and only fires in 2022. Three independent lines now
+> agree the book's downside protection is **stop-losses plus the crash-discount redeploy engine**,
+> not the dial: this project's own handoff had already recorded COVID as "risk 0.00", a forensic
+> audit found the book **68% invested going into the crash** with all seven open names stopping out
+> at **−7.05% while SPY fell −26.67%**, and an independent study reproduced the null. *Caveat that
+> travels with it: that third measurement was on a SPY sleeve rather than this book, so its absolute
+> levels are not ours, and the stop evidence rests on seven names in one crash.*
+>
+> Recording this because the earlier framing was the more dangerous kind of error: the observation
+> ("risk 0.00 through the crash") was correct and written down, but labelled as the dial working
+> rather than the dial not firing. A stale number leaves a trail; a right observation under a wrong
+> label does not.
 
 **So the dial is a rate-regime detector, not crash insurance.** Its evidence base is two
 out-of-sample episodes of the *same* stress type, not four of varied types. I publish that
