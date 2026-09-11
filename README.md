@@ -109,13 +109,23 @@ qualified-dividend tax plus one terminal liquidation bill):
 
 | Metric | SPY B&H | **Model dial ON (deployed)** |
 |---|---|---|
-| CAGR — hold | 12.15% | **17.37%** |
-| CAGR — liquidate | 12.15% | **16.70%** |
-| Sharpe | — | **0.720** |
-| Max drawdown | −33.7% | **−25.6%** |
+| CAGR — hold | 12.15% | **16.87%** |
+| CAGR — liquidate | 12.15% | **16.25%** |
+| Sharpe | — | **0.698** |
+| Max drawdown | −33.7% | **−26.3%** |
 
-*Tax paid over the window: $45,580 on $158,909 of realized P&L. QQQ's after-tax column is omitted
+*Tax paid over the window: $50,718 on $162,760 of realized P&L. QQQ's after-tax column is omitted
 rather than carried over from a previous window — it has not been re-measured on this pin.*
+
+> **Corrected 2026-09-11 — the previous version of this table was too flattering.** It read 17.37%
+> hold / 16.70% liquidate / Sharpe 0.720 / −25.6% on $45,580 of tax. The simulator's lot ledger used
+> average cost, and every scale-in purchase inherited the position's original entry date — so shares
+> bought 200 days in and sold 200 days later were taxed as a 400-day long-term sale. 166 of 404
+> closed trades scaled in. With true first-in-first-out lots, each purchase keeps its own holding
+> clock: the long-term share of realized gains falls from 91% to 51%, tax rises by $5,138, and
+> after-tax CAGR drops about half a point. The pre-tax equity curve does not move (verified
+> byte-identical against the same code without the fix), and the old figures reproduce exactly from
+> the old ledger — so this is a method correction, not noise.
 
 > #### ⚠ Three caveats that must travel with the number above
 >
@@ -141,12 +151,13 @@ rather than carried over from a previous window — it has not been re-measured 
 > **The honest one-line summary is "promising and unproven", not "validated".**
 
 **The honest reading of the tax column.** The model's edge shrinks materially after tax: its
-Sharpe falls 0.92 → 0.74 and its drawdown deepens −21.3% → −27.0%, because annual tax payments
-come out of the equity curve at each year-end. The benchmarks barely move, because deferral is
-itself a structural advantage — QQQ closes from 2.4pp behind on CAGR to 1.0pp behind. What
-survives after tax is still real: higher return than both benchmarks, a better Sharpe and
-Sortino, and ~7pp less drawdown than SPY. But anyone comparing this to an index fund should use
-the after-tax table, not the pre-tax one.
+CAGR falls 21.75% → 16.25% (liquidate basis), its Sharpe 0.901 → 0.698, and its drawdown deepens
+−20.1% → −26.3%, because annual tax payments come out of the equity curve at each year-end. SPY's
+drawdown does not move, because deferral is itself a structural advantage — a buy-and-hold fund pays
+its capital-gains bill once, at the end. The margin over SPY narrows from +7.22pp to +4.10pp a year,
+with ~7pp less drawdown. That is a smaller margin than the pre-tax one, which was already not
+statistically significant (caveat 1 above). Anyone comparing this to an index fund should use the
+after-tax table, not the pre-tax one.
 
 ### Overfitting statistics — published as measured, including the one that got worse
 
