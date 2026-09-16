@@ -104,18 +104,20 @@ Window `2020-01-02 → 2025-08-29`, which is where the pinned candidate set can 
 | Sharpe | 0.623 | 0.716 | **0.901** |
 | Max drawdown | −33.7% | −35.1% | **−20.1%** |
 
-**AFTER-TAX** (lot-true, single filer ~$72k NJ: 27.5% short / 20.5% long; SPY pays annual
-qualified-dividend tax plus one terminal liquidation bill):
+**AFTER-TAX** (same window; true FIFO tax lots; single filer ~$72k NJ: 27.5% short / 20.5% long; identical rules
+both sides — annual tax on realised gains and on dividends, paid out of the account at year-end, plus one
+terminal bill on unrealised gain for the *liquidate* rows. Corrected 2026-09-16: the SPY "hold" cell used to
+show its liquidate figure, and QQQ has now been measured on this window):
 
-| Metric | SPY B&H | **Model dial ON (deployed)** |
-|---|---|---|
-| CAGR — hold | 12.15% | **16.87%** |
-| CAGR — liquidate | 12.15% | **16.25%** |
-| Sharpe | — | **0.698** |
-| Max drawdown | −33.7% | **−26.3%** |
+| Metric | SPY B&H | QQQ B&H | **Model dial ON (deployed)** |
+|---|---|---|---|
+| CAGR — hold | 14.22% | 19.28% | **16.87%** |
+| CAGR — liquidate | 12.10% | 16.46% | **16.25%** |
+| Sharpe (hold curve) | 0.61 | 0.71 | **0.698** |
+| Max drawdown (hold curve, Dec-31 lump tax) | −33.8% | −35.2% | **−26.3%** |
 
-*Tax paid over the window: $50,718 on $162,760 of realized P&L. QQQ's after-tax column is omitted
-rather than carried over from a previous window — it has not been re-measured on this pin.*
+*Tax per $100k over the window: strategy $50,718 on $162,760 of realized P&L plus a $7,106 terminal bill; SPY
+$2,300 of dividend tax plus $21,366 at liquidation; QQQ $1,146 plus $34,278.*
 
 > **Corrected 2026-09-11 — the previous version of this table was too flattering.** It read 17.37%
 > hold / 16.70% liquidate / Sharpe 0.720 / −25.6% on $45,580 of tax. The simulator's lot ledger used
@@ -135,8 +137,9 @@ rather than carried over from a previous window — it has not been re-measured 
 > reaches significance — the best is a cash-matched IWM at t = 1.93, still short of 1.96. At the
 > observed information ratio, separating this from luck would take **30–44 years** of track record.
 >
-> **2. Excluding 2020, the book only ties SPY** — 15.04% vs 14.32%, and it *loses* on Sharpe. The
-> headline margin is carried by the crash year.
+> **2. Excluding 2020 (2021-01-04 → 2025-08-29, pre-tax), the book only ties SPY** — 15.04% vs 14.32% (IR t 0.08)
+> — and its Sharpe is roughly equal (0.72 vs 0.68; 0.70 vs 0.66 from the 2020-12-31 close); the slice also starts
+> ~85% invested in 2020 cohorts. The headline margin is carried by the crash year.
 >
 > **3. 45.6% of lifetime P&L comes from a single entry cohort** (2020-04-02), whose entry date was
 > set by a library default in the simulator's quarterly calendar rather than by any model decision.
@@ -152,10 +155,12 @@ rather than carried over from a previous window — it has not been re-measured 
 
 **The honest reading of the tax column.** The model's edge shrinks materially after tax: its
 CAGR falls 21.75% → 16.25% (liquidate basis), its Sharpe 0.901 → 0.698, and its drawdown deepens
-−20.1% → −26.3%, because annual tax payments come out of the equity curve at each year-end. SPY's
-drawdown does not move, because deferral is itself a structural advantage — a buy-and-hold fund pays
-its capital-gains bill once, at the end. The margin over SPY narrows from +7.22pp to +4.10pp a year,
-with ~7pp less drawdown. That is a smaller margin than the pre-tax one, which was already not
+−20.1% → −26.3% on the hold basis, because annual tax payments come out of the equity curve at each
+year-end. The benchmarks barely move, because deferral is itself a structural advantage — a buy-and-hold
+fund pays its capital-gains bill once, at the end. The margin over SPY narrows from +7.22pp to +4.15pp a
+year liquidate-vs-liquidate (+2.65pp hold-vs-hold), with ~7pp less hold-basis drawdown. QQQ, which pays
+almost no tax along the way, is ahead by 2.41pp on the hold basis and level on the liquidate basis
+(−0.21pp). These are point estimates on one path, and the pre-tax margin they rest on was already not
 statistically significant (caveat 1 above). Anyone comparing this to an index fund should use the
 after-tax table, not the pre-tax one.
 
