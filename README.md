@@ -46,7 +46,8 @@ the record of *how* they died turned out to be the most valuable thing in the re
 
 4. **Defense in layers, never whipsaw.** The optimization target was drawdown resilience, not raw
    return. Fast crashes are handled by position stops plus a redeploy engine (in the COVID crash
-   the screen bought at 55%-below-value discounts and those trades returned +43%); slow credit
+   the screen bought at 55%-below-value discounts and those trades returned +43% — a pre-remediation
+   measurement, not re-measured on the pinned run, whose calendar 2020 (pre-tax, from 2020-01-02) was +61.1% vs SPY +17.2%); slow credit
    bears are handled by a macro dial that scales into T-bills. When I later ran four pre-registered
    studies trying to *replace* that dial (15 variants: transparent rules, regime gating, tax-aware
    actions, smoothed signals), every challenger died — several in instructive ways (a variant that
@@ -61,29 +62,36 @@ the record of *how* they died turned out to be the most valuable thing in the re
    evaluation window that ran 14 months past the data's coverage. Each fix shipped with a guard so
    the same class of error can't silently recur.
 
-## Validation results (fully audited, 2026-07-29; all figures total-return, Sharpe excess of T-bills)
+## Validation results (audited 2026-07-29, re-verified 2026-09-15; all figures total-return, Sharpe excess of T-bills)
 
-These numbers are the FIFTH measurement of this strategy — each prior set was retired when an
+The 2026-07-29 figures were the FOURTH measurement of this strategy (the tables below now carry the figures re-verified
+2026-09-15: the pin, and current code on the pinned candidates for the full cycle) — each prior set was retired when an
 adversarial audit found a data or methodology defect (EPS reconstruction, unscaled share counts,
 look-ahead beta, stale panel vintage, window tails past the last enterable cohort, an untaxed
 benchmark, and a macro-timing leak in the risk dial's training features). The audit trail is the
 point: every defect was found by attacking my own results, and the corrections were published even
 though they made the numbers worse.
 
-**Full multi-regime window, 2014-01 → 2025-09 — dial OFF:**
+**Full multi-regime window, 2014-01-02 → 2025-06-30 — dial OFF** (current code on the pinned candidates,
+re-verified 2026-09-15; SPY and QQQ are total-return on the same dates):
 
 | Metric | SPY B&H | QQQ B&H | **Model (dial off)** |
 |---|---|---|---|
-| Total return | 346% | 658% | **+321%** |
-| CAGR | 13.6% | 18.8% | **13.0%** |
-| Sharpe | 0.72 | — | **0.62** |
-| Max drawdown | −33.7% | −35.1% | **−29.5%** |
-| After-tax CAGR (liq, $72k NJ) | 11.8% | 16.8% | **9.7%** |
+| Total return (pre-tax) | +312.3% | +595.3% | **+304.0%** |
+| CAGR (pre-tax) | 13.12% | 18.38% | **12.92%** |
+| Sharpe (pre-tax, excess of T-bills) | 0.699 | 0.814 | **0.636** |
+| Max drawdown (pre-tax) | −33.72% | −35.12% | **−32.87%** |
+| After-tax CAGR (liquidate, true FIFO lots, $72k NJ, same rules for all three) | 11.25% | 16.28% | **9.61%** |
 
-**Read that honestly: the raw screen does NOT beat buy-and-hold over the full cycle** — it loses
-on return, Sharpe and after-tax, winning only on drawdown. Publishing that is deliberate.
+*The previously published set — +321% / 13.0% / Sharpe 0.62 / −29.5% / after-tax 9.7%, against SPY 13.6% and
+QQQ 18.8% — is the superseded 2026-07-29 vintage on the 2025-09-30 cut. It reproduces, but it is retired.*
 
-**Deployed configuration — dial ON, out-of-sample 2020-01 → 2025-09** (the dial is trained
+**Read that honestly: the raw screen does NOT beat buy-and-hold over the full cycle.** Pre-tax it ties SPY
+(−0.20pp at this end date, a two-session trough; about +0.8pp carried to 2025-08-29 by proxy) and trails it on
+Sharpe; its drawdown is about the same as SPY's; after tax (liquidate) it loses to SPY by about 1.65pp a
+year and to QQQ by 6.67pp. Publishing that is deliberate.
+
+**Deployed configuration — dial ON, out-of-sample 2020-01-02 → 2025-08-29** (the dial is trained
 strictly on 2008–2019 with a 63-day embargo at the boundary; its training features carry explicit
 FRED publication lags so it cannot see unpublished macro):
 
@@ -155,7 +163,8 @@ $2,300 of dividend tax plus $21,366 at liquidation; QQQ $1,146 plus $34,278.*
 
 **The honest reading of the tax column.** The model's edge shrinks materially after tax: its
 CAGR falls 21.75% → 16.25% (liquidate basis), its Sharpe 0.901 → 0.698, and its drawdown deepens
-−20.1% → −26.3% on the hold basis, because annual tax payments come out of the equity curve at each
+−20.1% → −26.3% on the hold basis (−22.6% to −27.6% depending on when the tax is paid; about −19% vs SPY −33% on a
+matched liquidation-value basis), because annual tax payments come out of the equity curve at each
 year-end. The benchmarks barely move, because deferral is itself a structural advantage — a buy-and-hold
 fund pays its capital-gains bill once, at the end. The margin over SPY narrows from +7.22pp to +4.15pp a
 year liquidate-vs-liquidate (+2.65pp hold-vs-hold), with ~7pp less hold-basis drawdown. QQQ, which pays
@@ -198,9 +207,9 @@ The result replaced a comfortable assumption with a map, and the map has a hole 
 
 | Regime | Defended by | Evidence |
 |---|---|---|
-| **Fast crash** (COVID-style) | stop-losses + cash redeploy | Stopped book finished 2020 at **+57.2%** (DD −20.2%) vs **+27.5%** (DD −46.5%) unstopped. **75% of that year's P&L came from positions opened *after* the March-23 bottom**, financed by stop exits that realised only −$9.3k — roughly a 6× return on the cost of stopping out. The macro dial is blind here (it scored 0.00 through the crash). |
-| **Rate-driven bear** (2022, 2018Q4) | the macro dial | **+9.33pp CAGR / +0.267 Sharpe** versus an exposure-matched constant-weight control holding the same *average* equity. Every constant weight scores Sharpe 0.66 — static de-levering cannot raise Sharpe — while the dial reaches 0.92. That gap is timing value by construction. |
-| **Slow, non-rate bear** (2011 sovereign, 2015-16 commodity) | **nothing** | Walk-forward CV across four out-of-sample folds: AUC **0.500 / 0.502 / 0.688 / 0.708**. The dial has genuine skill only in the rate-driven folds; in 2015-16 it sat *below its own median* during the selloff. And stops are actively **harmful** in slow bears (2022: −19.5% stopped vs −12.9% unstopped — whipsaw). |
+| **Fast crash** (COVID-style) | stop-losses + cash redeploy | *[Older-vintage stops A/B — its no-stop arm does not reproduce on the current pin and the 2026-09 re-simulations have not been checked by a third party, so no stops figure is quoted here.]* Verified on the pin (pre-tax, from 2020-01-02): calendar 2020 **+61.1%** vs SPY +17.2%; COVID decline leg 2020-02-19 → 03-23 **−9.0%** vs SPY −33.7% (the separate full-cycle dial-off book started in 2014: +56.9% / −14.3%). These are the book's results; how much the stops contributed is not verified. The macro dial is blind here — re-verified: it had zero effect in 2020 (the pin's same-data dial-off twin is identical through 2020-12-31, both +61.1%). |
+| **Rate-driven bear** (2022, 2018Q4) | the macro dial | **+9.33pp CAGR / +0.267 Sharpe** versus an exposure-matched constant-weight control holding the same *average* equity. Every constant weight scores Sharpe 0.66 — static de-levering cannot raise Sharpe — while the dial reaches 0.92. That gap is timing value by construction. *[Measured inside the rate-bear windows on the destroyed 07-30 vintage; the control curve is lost. Separately measured 2026-09-15 against a different control — the pin vs its same-data dial-off twin, 2020-01-02 → 2025-08-29, pre-tax: +2.99pp CAGR, Sharpe 0.901 vs 0.735, MaxDD −20.1% vs −32.6%, active-return t 0.45 (not significant) — about 91% of it the 2022 episode (+11.2pp), one out-of-sample event.]* |
+| **Slow, non-rate bear** (2011 sovereign, 2015-16 commodity) | **nothing** | Walk-forward CV across four out-of-sample folds: AUC **0.500 / 0.502 / 0.688 / 0.708**. The dial has genuine skill only in the rate-driven folds; in 2015-16 it sat *below its own median* during the selloff. Stops may also whipsaw in slow bears (an older-vintage stops A/B suggested so; not third-party verified, so no figure is quoted). |
 
 > **Added 2026-08-26 — the dial's net contribution over the DEPLOYED window is not positive.** The
 > `+9.33pp` above is measured *inside the rate-bear windows where the dial fires*. Measured across
@@ -213,6 +222,12 @@ The result replaced a comfortable assumption with a map, and the map has a hole 
 > at **−7.05% while SPY fell −26.67%**, and an independent study reproduced the null. *Caveat that
 > travels with it: that third measurement was on a SPY sleeve rather than this book, so its absolute
 > levels are not ours, and the stop evidence rests on seven names in one crash.*
+>
+> **Re-measured 2026-09-15 against a different control — the same-data dial-off twin** (same trades until the dial
+> first diverges, 2021-10-28): over 2020-01-02 → 2025-08-29 the dial adds +2.99pp/yr pre-tax (+2.84pp after tax,
+> liquidate basis) and cuts MaxDD from −32.6% to −20.1% — about 91% of it the 2022 episode, one out-of-sample event (t 0.45, not significant).
+> It still contributes nothing in COVID (both arms identical through 2020). Against the twin the dial is positive;
+> against an exposure-matched constant weight it was not. Both can hold, and neither is statistically established.
 >
 > Recording this because the earlier framing was the more dangerous kind of error: the observation
 > ("risk 0.00 through the crash") was correct and written down, but labelled as the dial working
@@ -235,12 +250,15 @@ a stress type it has never seen.
 
 Absolute levels above are survivorship-flattered (documented and bounded; a clean-data replay is
 gated before any real capital). Beyond that, the model has honest structural losses I'd rather
-state than have discovered: it goes flat in **value-factor winters** (2015-16-type — cheap keeps
-getting cheaper, and the edge *is* the exposure); it cannot track **mega-cap concentration
-rallies** (2023-type — a value screen will never own the index's seven largest growth names); it
-wins raw returns but loses *smoothness* in low-vol grind-up bulls; and after tax, a buy-and-hold
-QQQ is the one benchmark it doesn't beat — deferral is uncatchable compounding, which is exactly
-why this book is the defensive leg of a multi-strategy portfolio rather than the growth leg.
+state than have discovered: it lost the **2015-16 value winter** (dial-off book, pre-tax: +0.1% vs SPY +5.1% over 2015-01 → 2016-06 —
+though the "cheap keeps getting cheaper" mechanism is not established: 2016, when value led, was the losing year);
+it lags **QQQ in mega-cap concentration rallies** (2023, pre-tax: +31.9% dial-on vs QQQ +54.9%, though it beat SPY's
++26.2%); it loses both return and smoothness in low-vol grind-up bulls (2016H2-17); it tends to **miss fast
+V-shaped recoveries** (4 of 6 rebound legs lost; 2025 to 08-29 −0.9% vs SPY +10.7%); and after tax (2020-01-02 →
+2025-08-29, true FIFO lots) a buy-and-hold QQQ is the one benchmark it doesn't beat on a hold basis (19.28% vs
+16.87%) — on a liquidate basis it is a tie (16.46% vs 16.25%), and over the full cycle 2014-01-02 → 2025-06-30 (after
+tax, liquidate) both QQQ (16.28%) and SPY (11.25%) beat it (9.61%). Deferral is uncatchable compounding, which is exactly why this book is the
+defensive leg of a multi-strategy portfolio rather than the growth leg.
 
 ## Architecture
 
