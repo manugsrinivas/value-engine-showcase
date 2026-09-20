@@ -181,15 +181,20 @@ trials, so it is reported across a range rather than at the flattering end:
 
 | trials counted (N) | Deflated Sharpe |
 |---|---|
-| 4 — the calibration variants formally A/B-tested | 0.957 |
-| 20 | 0.908 |
-| **30 — an honest count of the configurations actually run** | **0.894** |
-| 100 | 0.850 |
+| 54 — counting distinct ideas tried | 0.827 |
+| **180 — an honest count of the configurations actually run** | **0.762** |
+| 275 — counting every re-run | 0.738 |
 
-**At an honest trial count the Sharpe does NOT clear the conventional 0.95 bar.** An earlier
-version of this file reported "Deflated Sharpe 0.989 — survives the multiple-testing haircut at
-95%" on N = 4 and a since-superseded vintage. That claim is withdrawn: it was true only at the
-narrowest defensible trial count.
+**At an honest trial count the Sharpe does NOT clear the conventional 0.95 bar** — and on the
+current measurement (2026-09-20) it does not clear it at *any* defensible trial count, the lowest
+of which is 54. The table above is the textbook formula; allowing for the fact that many trials were
+near-clones of each other lifts it to 0.85 at N = 180 (range 0.74-0.89). The trial count comes from
+a counting rule written down before the totals, and the spread of Sharpe across trials is measured
+from 125 saved test curves rather than assumed. Two earlier figures are superseded: "0.989 —
+survives the haircut at 95%" (true only at N = 4 on an older vintage, withdrawn) and 0.894 at N = 30
+(correct arithmetic on two inputs nobody recorded). One caveat travels with the current number: the
+Sharpe spread is measured on an earlier data vintage, and the seven current-vintage runs available
+today would put the central figure nearer 0.89 — still short of the bar.
 
 **PBO** (Probability of Backtest Overfitting, CSCV over the four calibration variants) is **0.91**.
 That says the *choice among those four near-identical configurations* (return correlation 0.80–0.89)
