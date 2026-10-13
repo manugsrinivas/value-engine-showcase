@@ -303,3 +303,16 @@ Most have a zero-setup `python <file>.py` self-demo.
 - **[Execution Engineering](docs/EXECUTION_ENGINEERING.md)** — the unglamorous half: the
   execution-layer failure classes a live system actually hits (wash-trade collisions, naked-stop
   windows, settlement races, corporate actions) and the engineering that closed each one.
+
+## What's not in this repo, and why
+
+This is a fresh-history export of a private working repo. The
+method and code are public; operational data is not:
+
+- No credentials or API keys, ever.
+- No broker account IDs, and no live account equity or P&L. Every
+  performance figure above comes from a backtest on a simulated $100k start.
+- No raw `data/`, `logs/` or `state/` — and no third-party data
+  whose licence bars redistribution.
+- Every performance number carries its window and basis. Figures
+  later found to be wrong are left out rather than quietly kept.
