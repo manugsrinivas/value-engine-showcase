@@ -81,7 +81,7 @@ re-verified 2026-09-15; SPY and QQQ are total-return on the same dates):
 | CAGR (pre-tax) | 13.12% | 18.38% | **12.92%** |
 | Sharpe (pre-tax, excess of T-bills) | 0.699 | 0.814 | **0.636** |
 | Max drawdown (pre-tax) | −33.72% | −35.12% | **−32.87%** |
-| After-tax CAGR (liquidate, true FIFO lots, $72k NJ, same rules for all three) | 11.25% | 16.28% | **9.61%** |
+| After-tax CAGR (liquidate, true FIFO lots, mid-bracket filer, same rules for all three) | 11.25% | 16.28% | **9.61%** |
 
 *The previously published set — +321% / 13.0% / Sharpe 0.62 / −29.5% / after-tax 9.7%, against SPY 13.6% and
 QQQ 18.8% — is the superseded 2026-07-29 vintage on the 2025-09-30 cut. It reproduces, but it is retired.*
@@ -112,7 +112,7 @@ Window `2020-01-02 → 2025-08-29`, which is where the pinned candidate set can 
 | Sharpe | 0.623 | 0.716 | **0.901** |
 | Max drawdown | −33.7% | −35.1% | **−20.1%** |
 
-**AFTER-TAX** (same window; true FIFO tax lots; single filer ~$72k NJ: 27.5% short / 20.5% long; identical rules
+**AFTER-TAX** (same window; true FIFO tax lots; an assumed mid-bracket filer, federal + state: 27.5% short / 20.5% long; identical rules
 both sides — annual tax on realised gains and on dividends, paid out of the account at year-end, plus one
 terminal bill on unrealised gain for the *liquidate* rows. Corrected 2026-09-16: the SPY "hold" cell used to
 show its liquidate figure, and QQQ has now been measured on this window):
@@ -310,7 +310,7 @@ This is a fresh-history export of a private working repo. The
 method and code are public; operational data is not:
 
 - No credentials or API keys, ever.
-- No broker account IDs, and no live account equity or P&L. Every
+- No broker account IDs, no live account equity or P&L, and no personal tax details. Every
   performance figure above comes from a backtest on a simulated $100k start.
 - No raw `data/`, `logs/` or `state/` — and no third-party data
   whose licence bars redistribution.
